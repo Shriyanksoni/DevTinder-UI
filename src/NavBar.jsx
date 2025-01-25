@@ -6,9 +6,9 @@ import { removeUser } from "./utils/userSlice";
 
 const NavBar = () => {
     const user = useSelector((store)=> store.user);
+    console.log(user)
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    console.log(user)
 
     const handleLogout = async ()=>{
         await axios.post("http://localhost:3000/logout", {},{withCredentials: true})
@@ -46,7 +46,7 @@ const NavBar = () => {
               </Link>
             </li>
             <li>
-              <a>Settings</a>
+              <Link to="/connections">Connections</Link>
             </li>
             <li>
               <a onClick={handleLogout}>Logout</a>
