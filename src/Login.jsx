@@ -7,7 +7,10 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null)
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [isLoginPage, setIsLoginPage] = useState(true);
+  const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -24,17 +27,49 @@ const Login = () => {
       dispatch(addUser(res.data));
       navigate("/");
     } catch (err) {
-        setError(err?.response?.data)
+      setError(err?.response?.data);
       console.log(err);
     }
   };
+
+  const handleSignUp = async ()=>{
+    try {
+      const res = await axios.post('http://localhost:3000/signup',{firstName,lastName,emailId: email, password}, {withCredentials: true});
+      dispatch(addUser(res?.data));
+      navigate("/profile");
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className="flex justify-center my-2">
       <div className="card bg-base-300 w-96 shadow-xl">
         <div className="card-body">
-          <h2 className="card-title justify-center mb-2">Login</h2>
+          <h2 className="card-title justify-center mb-2">{isLoginPage ?  'Login' : 'Sign Up'}</h2>
           <div>
+            {!isLoginPage && (
+              <>
+                <label className="input input-bordered flex items-center gap-2 mb-4">
+                  <input
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="grow"
+                    placeholder="First Name"
+                  />
+                </label>
+                <label className="input input-bordered flex items-center gap-2 mb-4">
+                  <input
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="grow"
+                    placeholder="Last Name"
+                  />
+                </label>
+              </>
+            )}
             <label className="input input-bordered flex items-center gap-2 mb-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -77,9 +112,12 @@ const Login = () => {
           </div>
           {error && <p className="text-red-600">{error}</p>}
           <div className="card-actions justify-center mt-4">
-            <button className="btn btn-primary" onClick={handleLogin}>
-              Login
+            <button className="btn btn-primary" onClick={isLoginPage ? handleLogin : handleSignUp}>
+              { isLoginPage ? 'Login' : 'Sign Up'}
             </button>
+          </div>
+          <div className="cursor-pointer text-neutral-500 justify-center m-auto py-2" onClick={()=> setIsLoginPage((value)=> !value)}>
+            {isLoginPage ? 'New User? Sign Up' : 'Existing User? Login'}
           </div>
         </div>
       </div>

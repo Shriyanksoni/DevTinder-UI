@@ -18,6 +18,10 @@ const Connections = () => {
     }
   };
 
+  useEffect(() => {
+    getConnections();
+  }, []);
+
   const Profiles = (user) => {
     const { firstName, lastName, photoUrl, age, about, gender} = user?.user
     console.log(user.user)
@@ -35,9 +39,6 @@ const Connections = () => {
     );
   };
 
-  useEffect(() => {
-    getConnections();
-  }, []);
   return (
       <div className="">
         <p className="text-2xl text-rose-400 justify-center content-center mt-3 ms-4">Connections</p>
